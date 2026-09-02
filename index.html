@@ -177,15 +177,19 @@
     display:flex;flex-direction:column;
   }
   .hero-img-col{
-    position:relative;height:44vh;min-height:280px;overflow:hidden;
+    position:relative;height:clamp(280px,48vw,510px);min-height:280px;overflow:hidden;
   }
   .hero-img-col img{
-    width:100%;height:100%;object-fit:cover;
-    animation:slowzoom 16s ease-in-out infinite alternate;
+    width:100%;height:100%;object-fit:cover;object-position:center 55%;
+    animation:slowzoom 20s ease-in-out infinite alternate;
   }
-  @keyframes slowzoom{from{transform:scale(1);}to{transform:scale(1.08);}}
+  @keyframes slowzoom{from{transform:scale(1);}to{transform:scale(1.03);}}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+  }
   .hero-img-col .hero-tag{
-    position:absolute;left:16px;top:16px;
+    position:absolute;left:16px;top:16px;z-index:2;
     background:var(--secondary);color:#fff;
     font-family:var(--font-heading);font-weight:700;font-size:.75rem;
     letter-spacing:.08em;padding:.5em .8em;border-radius:6px;
@@ -575,9 +579,8 @@
   <!-- ================= HERO ================= -->
   <section class="hero" id="hero">
     <div class="hero-img-col">
-      <span class="hero-tag" data-lang-th="ยานพาหนะพร้อมออกเดินทาง" data-lang-en="VEHICLE READY FOR DEPARTURE">ยานพาหนะพร้อมออกเดินทาง</span>
-      <img src="https://images.pexels.com/photos/23319104/pexels-photo-23319104.jpeg?w=900&h=1100&fit=crop" alt="รถเอสยูวีสีดำจอดพร้อมให้บริการรับส่ง">
-      <span class="credit">Photo by <a href="https://www.pexels.com/@introspectivedsgn" target="_blank" rel="noopener nofollow">Erik Mclean / Pexels</a></span>
+      <span class="hero-tag" data-lang-th="รถตู้วีไอพี พร้อมออกเดินทาง" data-lang-en="VIP VAN READY FOR DEPARTURE">รถตู้วีไอพี พร้อมออกเดินทาง</span>
+      <img src="assets/img/van.jpeg" alt="รถตู้โตโยต้า ไฮเอซ สีขาว ติดตราโรบินสัน เขาหลัก จอดพร้อมรับส่งผู้โดยสาร" width="1331" height="800" decoding="async" fetchpriority="high">
     </div>
     <div class="hero-right">
       <div class="hero-right-inner">
@@ -743,7 +746,7 @@
         <article class="fleet-card reveal">
           <div class="fleet-img">
             <span class="fleet-gate">GATE 1</span>
-            <img src="https://images.pexels.com/photos/2226607/pexels-photo-2226607.jpeg?w=600&h=400&fit=crop" alt="ซีดานพรีเมียมสีดำจอดในโรงจอดรถ">
+            <img src="https://images.pexels.com/photos/2226607/pexels-photo-2226607.jpeg?w=600&h=400&fit=crop" alt="ซีดานพรีเมียมสีดำจอดในโรงจอดรถ" width="600" height="400" decoding="async" loading="lazy">
           </div>
           <div class="fleet-body">
             <h3 data-lang-th="ซีดานพรีเมียม" data-lang-en="Premium Sedan">ซีดานพรีเมียม</h3>
@@ -759,7 +762,7 @@
         <article class="fleet-card reveal">
           <div class="fleet-img">
             <span class="fleet-gate">GATE 2</span>
-            <img src="https://images.pexels.com/photos/5332005/pexels-photo-5332005.jpeg?w=600&h=400&fit=crop" alt="รถเอสยูวีสีดำวิ่งในสวนสาธารณะ">
+            <img src="assets/img/suv.jpeg" alt="รถเอสยูวีโตโยต้า ฟอร์จูนเนอร์ สีขาว จอดรอรับผู้โดยสารหน้าอาคารผู้โดยสารสนามบิน" width="1600" height="1210" decoding="async" loading="lazy">
           </div>
           <div class="fleet-body">
             <h3 data-lang-th="เอสยูวีผู้บริหาร" data-lang-en="Executive SUV">เอสยูวีผู้บริหาร</h3>
@@ -769,13 +772,12 @@
               <div class="fs-row"><span data-lang-th="แอร์" data-lang-en="A/C">แอร์</span><span data-lang-th="มี" data-lang-en="Yes">มี</span></div>
             </div>
           </div>
-          <div class="fleet-credit">Photo by <a href="https://www.pexels.com/@matreding" target="_blank" rel="noopener nofollow">Mathias Reding / Pexels</a></div>
         </article>
 
         <article class="fleet-card reveal">
           <div class="fleet-img">
             <span class="fleet-gate">GATE 3</span>
-            <img src="https://images.pexels.com/photos/39075475/pexels-photo-39075475.jpeg?w=600&h=400&fit=crop" alt="รถตู้วีไอพีสีขาวจอดบริเวณสนามบิน">
+            <img src="assets/img/van.jpeg" alt="รถตู้โตโยต้า ไฮเอซ สีขาว ติดตราโรบินสัน เขาหลัก จอดพร้อมรับส่งผู้โดยสาร" width="1331" height="800" decoding="async" loading="lazy">
           </div>
           <div class="fleet-body">
             <h3 data-lang-th="รถตู้วีไอพี" data-lang-en="VIP Minivan">รถตู้วีไอพี</h3>
@@ -785,7 +787,6 @@
               <div class="fs-row"><span data-lang-th="แอร์" data-lang-en="A/C">แอร์</span><span data-lang-th="มี" data-lang-en="Yes">มี</span></div>
             </div>
           </div>
-          <div class="fleet-credit">Photo by <a href="https://www.pexels.com/@mzynasx" target="_blank" rel="noopener nofollow">Yazid N / Pexels</a></div>
         </article>
       </div>
     </div>
@@ -857,7 +858,7 @@
 
       <div class="why-row reveal">
         <div class="why-img">
-          <img src="https://images.pexels.com/photos/29221981/pexels-photo-29221981.jpeg?w=700&h=500&fit=crop" alt="คนขับมืออาชีพขณะขับรถ">
+          <img src="https://images.pexels.com/photos/29221981/pexels-photo-29221981.jpeg?w=700&h=500&fit=crop" alt="คนขับมืออาชีพขณะขับรถ" width="700" height="500" decoding="async" loading="lazy">
         </div>
         <div class="why-text">
           <span class="why-num">01</span>
@@ -869,13 +870,24 @@
 
       <div class="why-row rev reveal">
         <div class="why-img">
-          <img src="https://images.pexels.com/photos/29936876/pexels-photo-29936876.jpeg?w=700&h=500&fit=crop" alt="กระเป๋าเดินทางหลายใบวางเรียงกัน">
+          <img src="https://images.pexels.com/photos/29936876/pexels-photo-29936876.jpeg?w=700&h=500&fit=crop" alt="กระเป๋าเดินทางหลายใบวางเรียงกัน" width="700" height="500" decoding="async" loading="lazy">
         </div>
         <div class="why-text">
           <span class="why-num">02</span>
           <h3 data-lang-th="ติดตามเที่ยวบินแบบเรียลไทม์" data-lang-en="Real-Time Flight Tracking">ติดตามเที่ยวบินแบบเรียลไทม์</h3>
           <p data-lang-th="ระบบของเราติดตามเที่ยวบินอัตโนมัติ หากเที่ยวบินล่าช้า คนขับจะปรับเวลารอให้โดยไม่มีค่าใช้จ่ายเพิ่ม" data-lang-en="Our system tracks your flight automatically — if it's delayed, your driver adjusts the wait time at no extra charge.">ระบบของเราติดตามเที่ยวบินอัตโนมัติ หากเที่ยวบินล่าช้า คนขับจะปรับเวลารอให้โดยไม่มีค่าใช้จ่ายเพิ่ม</p>
           <div class="why-credit">Photo by <a href="https://www.pexels.com/@ahmet-kayra-174853248" target="_blank" rel="noopener nofollow">Ahmet Kayra / Pexels</a></div>
+        </div>
+      </div>
+
+      <div class="why-row reveal">
+        <div class="why-img">
+          <img src="assets/img/suv.jpeg" alt="รถเอสยูวีโตโยต้า ฟอร์จูนเนอร์ สีขาว จอดรอรับผู้โดยสารหน้าอาคารผู้โดยสารสนามบิน" width="1600" height="1210" decoding="async" loading="lazy">
+        </div>
+        <div class="why-text">
+          <span class="why-num">03</span>
+          <h3 data-lang-th="รถเอสยูวีสำหรับสัมภาระเยอะเป็นพิเศษ" data-lang-en="SUVs for Extra Luggage">รถเอสยูวีสำหรับสัมภาระเยอะเป็นพิเศษ</h3>
+          <p data-lang-th="เดินทางกับกระเป๋าใบใหญ่ กระดานโต้คลื่น หรืออุปกรณ์ดำน้ำ เลือกรถเอสยูวีที่มีพื้นที่เก็บสัมภาระกว้างขวาง นั่งสบายสูงสุด 5 ท่าน กระเป๋าใหญ่ 4 ใบ" data-lang-en="Travelling with oversized bags, surfboards, or dive gear? Choose an SUV with a generous luggage bay — seats 5, fits 4 large bags.">เดินทางกับกระเป๋าใบใหญ่ กระดานโต้คลื่น หรืออุปกรณ์ดำน้ำ เลือกรถเอสยูวีที่มีพื้นที่เก็บสัมภาระกว้างขวาง นั่งสบายสูงสุด 5 ท่าน กระเป๋าใหญ่ 4 ใบ</p>
         </div>
       </div>
     </div>
@@ -952,13 +964,13 @@
 
       <div class="dest-wrap reveal">
         <div class="dest-main">
-          <img src="https://images.unsplash.com/photo-1729808641754-381cc885d73f?w=900&h=600&fit=crop" alt="มุมมองจากมุมสูงของรีสอร์ตริมทะเลเขตร้อน">
+          <img src="https://images.unsplash.com/photo-1729808641754-381cc885d73f?w=900&h=600&fit=crop" alt="มุมมองจากมุมสูงของรีสอร์ตริมทะเลเขตร้อน" width="900" height="600" decoding="async" loading="lazy">
           <div class="dest-overlay">
             <h3 data-lang-th="รีสอร์ตริมทะเล เขาหลัก" data-lang-en="Beachfront Resort, Khao Lak">รีสอร์ตริมทะเล เขาหลัก</h3>
           </div>
         </div>
         <div class="dest-side">
-          <img src="https://images.pexels.com/photos/36386176/pexels-photo-36386176.jpeg?w=600&h=700&fit=crop" alt="ถนนเรียงรายด้วยต้นปาล์มในเขาหลัก">
+          <img src="https://images.pexels.com/photos/36386176/pexels-photo-36386176.jpeg?w=600&h=700&fit=crop" alt="ถนนเรียงรายด้วยต้นปาล์มในเขาหลัก" width="600" height="700" decoding="async" loading="lazy">
           <span class="dest-badge" data-lang-th="65 นาทีจากสนามบิน" data-lang-en="65 MIN FROM AIRPORT">65 นาทีจากสนามบิน</span>
         </div>
       </div>
@@ -988,28 +1000,28 @@
         <h3 data-lang-th="ขอใบจองด่วน" data-lang-en="Quick Booking Request">ขอใบจองด่วน</h3>
         <div class="form-grid">
           <div class="field full">
-            <label data-lang-th="ชื่อ-นามสกุล" data-lang-en="Full Name">ชื่อ-นามสกุล</label>
-            <input type="text" required>
+            <label for="bk-name" data-lang-th="ชื่อ-นามสกุล" data-lang-en="Full Name">ชื่อ-นามสกุล</label>
+            <input type="text" id="bk-name" name="name" autocomplete="name" required>
           </div>
           <div class="field">
-            <label data-lang-th="เบอร์โทร" data-lang-en="Phone">เบอร์โทร</label>
-            <input type="tel" required>
+            <label for="bk-phone" data-lang-th="เบอร์โทร" data-lang-en="Phone">เบอร์โทร</label>
+            <input type="tel" id="bk-phone" name="phone" autocomplete="tel" required>
           </div>
           <div class="field">
-            <label data-lang-th="เลขที่เที่ยวบิน" data-lang-en="Flight No.">เลขที่เที่ยวบิน</label>
-            <input type="text" placeholder="TG 2201">
+            <label for="bk-flight" data-lang-th="เลขที่เที่ยวบิน" data-lang-en="Flight No.">เลขที่เที่ยวบิน</label>
+            <input type="text" id="bk-flight" name="flight" placeholder="TG 2201">
           </div>
           <div class="field">
-            <label data-lang-th="วันที่เดินทาง" data-lang-en="Travel Date">วันที่เดินทาง</label>
-            <input type="date" required>
+            <label for="bk-date" data-lang-th="วันที่เดินทาง" data-lang-en="Travel Date">วันที่เดินทาง</label>
+            <input type="date" id="bk-date" name="date" required>
           </div>
           <div class="field">
-            <label data-lang-th="เวลา" data-lang-en="Time">เวลา</label>
-            <input type="time" required>
+            <label for="bk-time" data-lang-th="เวลา" data-lang-en="Time">เวลา</label>
+            <input type="time" id="bk-time" name="time" required>
           </div>
           <div class="field full">
-            <label data-lang-th="เส้นทาง" data-lang-en="Route">เส้นทาง</label>
-            <select>
+            <label for="bk-route" data-lang-th="เส้นทาง" data-lang-en="Route">เส้นทาง</label>
+            <select id="bk-route" name="route">
               <option data-lang-th="สนามบิน → โรงแรม" data-lang-en="Airport → Hotel">สนามบิน → โรงแรม</option>
               <option data-lang-th="โรงแรม → สนามบิน" data-lang-en="Hotel → Airport">โรงแรม → สนามบิน</option>
               <option data-lang-th="เหมาคันรายวัน" data-lang-en="Daily Charter">เหมาคันรายวัน</option>
@@ -1148,7 +1160,7 @@
   lucide.createIcons();
 
   // Language switcher (verbatim logic)
-  (function(){var K='site-lang',L=localStorage.getItem(K)||'th';function S(l){L=l;localStorage.setItem(K,l);document.documentElement.lang=l;document.querySelectorAll('[data-lang-th]').forEach(function(e){var t=e.getAttribute('data-lang-'+l);if(t!==null){if(/[<&]/.test(t)){e.innerHTML=t}else{e.textContent=t}}});var lb=document.querySelector('.lang-sw__label');if(lb){lb.textContent=l.toUpperCase()}}var sw=document.querySelector('.lang-sw');if(sw){sw.addEventListener('click',function(){S(L==='th'?'en':'th')});sw.style.cursor='pointer'}if(L!=='th'){S(L)}})();
+  (function(){var K='site-lang';function get(){try{return localStorage.getItem(K)}catch(e){return null}}function set(v){try{localStorage.setItem(K,v)}catch(e){}}var L=get()||'th';function S(l){L=l;set(l);document.documentElement.lang=l;document.querySelectorAll('[data-lang-th]').forEach(function(e){var t=e.getAttribute('data-lang-'+l);if(t!==null){if(/[<&]/.test(t)){e.innerHTML=t}else{e.textContent=t}}});var lb=document.querySelector('.lang-sw__label');if(lb){lb.textContent=l.toUpperCase()}}var sw=document.querySelector('.lang-sw');if(sw){sw.addEventListener('click',function(){S(L==='th'?'en':'th')});sw.style.cursor='pointer'}if(L!=='th'){S(L)}})();
 </script>
 </body>
 </html>
