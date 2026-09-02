@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaraC Transportation — ระบบขนส่งโรบินสัน เขาหลัก 24 ชม.</title>
+<meta name="description" content="บริการรถรับส่งอย่างเป็นทางการสำหรับโรงแรมโรบินสัน เขาหลัก เชื่อมต่อสนามบินภูเก็ตตลอด 24 ชั่วโมง ติดตามเที่ยวบินแบบเรียลไทม์ ตรงเวลา ปลอดภัย มืออาชีพ">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.460.0"></script>
+<style>
+:root{
+  --background:#14161A;
+  --card:#1B1E25;
+  --bg-accent:#0D111A;
+  --foreground:#E9EEF3;
+  --muted:#7C8898;
+  --border:#2A2F38;
+  --primary:#00E5FF;
+  --secondary:#333C48;
+  --accent:#FFB000;
+  --font-heading:'Kanit', sans-serif;
+  --font-body:'IBM Plex Sans Thai', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:88px;}
+body{
+  background:var(--background);
+  color:var(--foreground);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.8;
+  word-break:break-word;
+  overflow-wrap:break-word;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--font-heading);line-height:1.5;font-weight:600;padding-top:.15em;}
+img{max-width:100%;height:auto;display:block;}
+a{color:inherit;text-decoration:none;}
+ul{list-style:none;}
+.mono-en{font-family:var(--font-heading);text-transform:uppercase;letter-spacing:.08em;}
+.container{max-width:1200px;margin:0 auto;padding:0 20px;}
+section{position:relative;padding:72px 0;}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-heading);text-transform:uppercase;letter-spacing:.14em;
+  font-size:.72rem;color:var(--primary);
+  background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.3);
+  padding:.5em 1em;border-radius:100px;margin-bottom:18px;
+}
+.dot-ping{width:7px;height:7px;border-radius:50%;background:var(--primary);position:relative;flex:none;}
+.dot-ping::after{content:'';position:absolute;inset:0;border-radius:50%;background:var(--primary);animation:ping 1.8s cubic-bezier(0,0,.2,1) infinite;}
+.dot-ping.amber, .dot-ping.amber::after{background:var(--accent);}
+@keyframes ping{0%{transform:scale(1);opacity:.8;}75%,100%{transform:scale(2.6);opacity:0;}}
+h2.section-title{font-size:clamp(1.7rem,4vw,2.6rem);color:var(--foreground);}
+h2.section-title .accent-txt{color:var(--primary);}
+.section-sub{color:var(--muted);max-width:640px;margin-top:14px;font-size:1rem;}
+.section-tag{font-family:var(--font-heading);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .6s ease-out, transform .6s ease-out;}
+.reveal.is-visible{opacity:1;transform:translateY(0);}
+
+/* ===== SIDEBAR (fixed, desktop dashboard rail) ===== */
+#sideRail{
+  display:none;
+}
+@media(min-width:1024px){
+  #sideRail{
+    display:flex;flex-direction:column;align-items:center;
+    position:fixed;left:0;top:0;bottom:0;width:88px;z-index:80;
+    background:var(--bg-accent);border-right:1px solid var(--border);
+    padding:20px 0;gap:6px;
+  }
+  #sideRail .rail-logo{
+    width:44px;height:44px;border-radius:12px;background:rgba(0,229,255,.1);
+    border:1px solid rgba(0,229,255,.35);display:flex;align-items:center;justify-content:center;
+    color:var(--primary);font-family:var(--font-heading);font-weight:700;font-size:.85rem;
+    margin-bottom:28px;
+  }
+  #sideRail nav{display:flex;flex-direction:column;gap:4px;width:100%;align-items:center;flex:1;}
+  #sideRail a{
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    width:72px;padding:10px 4px 12px;border-radius:12px;color:var(--muted);
+    font-family:var(--font-heading);font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;
+    transition:background .25s,color .25s;
+  }
+  #sideRail a:hover{background:var(--card);color:var(--primary);}
+  #sideRail a i{width:19px;height:19px;}
+  #sideRail .rail-status{
+    display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);
+    font-family:var(--font-heading);font-size:.58rem;letter-spacing:.08em;padding-bottom:6px;
+  }
+  body{padding-left:88px;}
+}
+
+/* ===== HEADER ===== */
+#siteHeader{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  display:flex;align-items:center;justify-content:space-between;
+  height:76px;padding:0 20px;
+  background:rgba(20,22,26,.72);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+  transition:height .3s ease, background .3s ease;
+}
+@media(min-width:1024px){#siteHeader{left:88px;}}
+#siteHeader.scrolled{height:60px;background:rgba(13,17,26,.92);}
+#siteHeader .logo{
+  font-family:var(--font-heading);font-weight:700;font-size:clamp(1rem,3vw,1.3rem);
+  white-space:nowrap;color:var(--foreground);letter-spacing:.01em;flex:none;
+  display:flex;align-items:baseline;gap:6px;
+}
+#siteHeader .logo span{color:var(--primary);}
+#siteHeader .logo small{font-family:var(--font-body);font-weight:400;color:var(--muted);font-size:.6rem;letter-spacing:.08em;display:none;}
+@media(min-width:480px){#siteHeader .logo small{display:inline;}}
+#siteHeader nav.main-nav{
+  display:none;
+}
+#siteHeader nav.main-nav a{
+  font-family:var(--font-heading);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);padding:10px 4px;transition:color .2s;white-space:nowrap;
+}
+#siteHeader nav.main-nav a:hover{color:var(--primary);}
+@media(min-width:768px){
+  #siteHeader nav.main-nav{display:flex;gap:22px;align-items:center;flex:1;justify-content:center;padding:0 16px;min-width:0;}
+}
+.header-right{display:flex;align-items:center;gap:14px;flex:none;}
+.lang-sw{
+  display:flex;align-items:center;gap:5px;color:var(--muted);font-size:.78em;
+  font-family:var(--font-heading);letter-spacing:.05em;padding:6px;
+}
+.lang-sw svg{stroke:var(--muted);}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--font-heading);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem;
+  padding:.85em 1.3em;border-radius:10px;min-height:44px;border:1px solid transparent;
+  transition:transform .25s, box-shadow .25s, background .25s, border-color .25s;
+  cursor:pointer;white-space:nowrap;
+}
+.btn-primary{background:var(--primary);color:var(--background);font-weight:600;box-shadow:0 0 0 0 rgba(0,229,255,0);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,229,255,.28);}
+.btn-secondary{background:var(--secondary);color:var(--foreground);border-color:var(--border);}
+.btn-secondary:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-2px);}
+.btn-ghost{background:transparent;color:var(--foreground);border-color:var(--border);}
+.btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
+#headerCta{padding:.7em 1.1em;font-size:.72rem;}
+@media(min-width:480px){#headerCta{padding:.85em 1.4em;font-size:.78rem;}}
+.hamburger{
+  display:flex;align-items:center;justify-content:center;width:44px;height:44px;
+  background:transparent;border:1px solid var(--border);border-radius:10px;color:var(--foreground);
+  flex:none;cursor:pointer;
+}
+@media(min-width:768px){.hamburger{display:none;}}
+#mobileNav{
+  position:fixed;inset:0;z-index:110;background:var(--bg-accent);
+  display:flex;flex-direction:column;padding:24px 24px 40px;
+  transform:translateX(100%);transition:transform .35s ease;
+}
+#mobileNav.open{transform:translateX(0);}
+#mobileNav .close-row{display:flex;justify-content:flex-end;}
+#mobileNav .close-btn{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:10px;color:var(--foreground);}
+#mobileNav nav{display:flex;flex-direction:column;gap:6px;margin-top:32px;}
+#mobileNav nav a{
+  font-family:var(--font-heading);font-size:1.15rem;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--foreground);padding:16px 6px;border-bottom:1px solid var(--border);
+}
+#mobileNav .mobile-cta{margin-top:28px;}
+@media(min-width:768px){#mobileNav{display:none;}}
+
+/* ===== HERO ===== */
+#home{padding-top:150px;padding-bottom:60px;position:relative;overflow:hidden;background:var(--bg-accent);}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.28;filter:grayscale(.2) brightness(.7);animation:slowzoom 24s ease-in-out infinite alternate;}
+@keyframes slowzoom{from{transform:scale(1);}to{transform:scale(1.08);}}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,17,26,.65) 0%,rgba(13,17,26,.92) 75%,var(--background) 100%);}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:40px;}
+@media(min-width:960px){.hero-inner{grid-template-columns:1.05fr 1fr;align-items:center;gap:32px;}}
+.hero-inner > *{grid-column:1;}
+@media(min-width:960px){.hero-inner > *:first-child{grid-column:1;}.hero-inner > *:last-child{grid-column:2;}}
+#home h1{font-size:clamp(2rem,5.4vw,3.4rem);color:var(--foreground);}
+#home h1 .hl{color:var(--primary);}
+.hero-sub{color:var(--muted);margin-top:20px;max-width:520px;font-size:1.02rem;}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
+.hero-actions .btn{flex:1 1 auto;min-width:180px;}
+@media(min-width:480px){.hero-actions .btn{flex:0 1 auto;}}
+.stat-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:44px;}
+@media(min-width:640px){.stat-strip{grid-template-columns:repeat(4,minmax(0,1fr));}}
+.stat-strip>div{grid-column:auto;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;}
+.stat-box .num{font-family:var(--font-heading);color:var(--primary);font-size:1.5rem;font-variant-numeric:tabular-nums;}
+.stat-box .lbl{font-family:var(--font-heading);font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:4px;}
+
+/* HUD panel */
+.hud-panel{
+  position:relative;background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:22px 18px 26px;overflow:visible;
+}
+.hud-panel::before,.hud-panel::after{content:'';position:absolute;width:22px;height:22px;border-color:var(--primary);opacity:.7;}
+.hud-panel::before{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid;border-top-left-radius:8px;}
+.hud-panel::after{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid;border-bottom-right-radius:8px;}
+.hud-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.hud-head .tag{font-family:var(--font-heading);font-size:.65rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+.hud-head .live{display:flex;align-items:center;gap:6px;font-family:var(--font-heading);font-size:.65rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;}
+.route-svg{width:100%;height:auto;overflow:visible;}
+.route-path{stroke-dasharray:8 7;animation:dashmove 2.4s linear infinite;}
+@keyframes dashmove{to{stroke-dashoffset:-30;}}
+.wp-label{font-family:var(--font-heading);font-size:11px;fill:var(--muted);letter-spacing:.04em;}
+.wp-label.main{fill:var(--foreground);font-weight:600;}
+.route-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;}
+.route-meta>div{grid-column:auto;text-align:center;border-right:1px solid var(--border);}
+.route-meta>div:last-child{border-right:none;}
+.route-meta .v{font-family:var(--font-heading);color:var(--foreground);font-size:1.1rem;font-variant-numeric:tabular-nums;}
+.route-meta .k{font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:var(--font-heading);margin-top:3px;}
+
+/* ===== ROUTE / STEPS SECTION ===== */
+#route{background:var(--background);}
+.steps-manifest{margin-top:44px;border-top:1px solid var(--border);}
+.step-row{
+  display:grid;grid-template-columns:56px minmax(0,1fr);gap:18px;
+  padding:22px 0;border-bottom:1px solid var(--border);align-items:start;
+}
+.step-row>*{grid-column:auto;}
+.step-num{font-family:var(--font-heading);font-size:1.6rem;color:var(--primary);font-variant-numeric:tabular-nums;grid-column:1;}
+.step-body{grid-column:2;min-width:0;}
+.step-body h4{font-size:1.05rem;color:var(--foreground);}
+.step-body p{color:var(--muted);margin-top:6px;font-size:.95rem;}
+@media(min-width:768px){
+  .step-row{grid-template-columns:70px minmax(0,1fr) minmax(0,220px);}
+  .step-row>*{grid-column:auto;}
+  .step-num{grid-column:1;}
+  .step-body{grid-column:2;}
+  .step-time{grid-column:3;text-align:right;font-family:var(--font-heading);font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+}
+.step-time{display:none;}
+@media(min-width:768px){.step-time{display:block;}}
+
+/* ===== SERVICES ACCORDION ===== */
+#services{background:var(--bg-accent);}
+.manifest{margin-top:40px;display:flex;flex-direction:column;gap:12px;}
+.manifest details{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:6px 20px;
+  transition:border-color .25s;
+}
+.manifest details[open]{border-color:var(--primary);}
+.manifest summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;gap:16px;padding:18px 0;
+  font-family:var(--font-heading);color:var(--foreground);font-size:1.02rem;
+}
+.manifest summary::-webkit-details-marker{display:none;}
+.manifest summary .sv-idx{color:var(--primary);font-size:.85em;font-variant-numeric:tabular-nums;flex:none;}
+.manifest summary .sv-name{flex:1;min-width:0;}
+.manifest summary i.chev{transition:transform .3s;flex:none;color:var(--muted);width:18px;height:18px;}
+.manifest details[open] summary i.chev{transform:rotate(180deg);color:var(--primary);}
+.manifest .sv-body{color:var(--muted);padding:0 0 20px 0;font-size:.95rem;}
+.sv-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+.sv-tags span{background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.25);color:var(--primary);font-family:var(--font-heading);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;padding:.5em .9em;border-radius:100px;}
+
+/* ===== FLEET ===== */
+#fleet{background:var(--background);}
+.fleet-row{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;margin-top:44px;align-items:center;}
+.fleet-row+.fleet-row{margin-top:56px;}
+@media(min-width:860px){
+  .fleet-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;}
+  .fleet-row>*{grid-column:auto;}
+  .fleet-row.rev .fleet-media{grid-column:2;}
+  .fleet-row.rev .fleet-text{grid-column:1;}
+}
+.fleet-media{position:relative;border-radius:20px;overflow:visible;}
+.fleet-media img{border-radius:20px;border:1px solid var(--border);}
+.fleet-media .credit{font-size:.68rem;color:var(--muted);margin-top:8px;}
+.fleet-media .credit a{color:var(--muted);text-decoration:underline;}
+.fleet-text h3{font-size:1.5rem;color:var(--foreground);}
+.fleet-text p{color:var(--muted);margin-top:12px;}
+.spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px;}
+.spec-grid>div{grid-column:auto;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.spec-grid .k{font-family:var(--font-heading);font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+.spec-grid .v{margin-top:4px;font-size:.9rem;color:var(--foreground);display:flex;align-items:center;gap:6px;}
+.spec-grid .v i{width:15px;height:15px;color:var(--primary);}
+
+/* ===== TRUST BENTO ===== */
+#trust{background:var(--bg-accent);}
+.bento{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin-top:44px;}
+@media(min-width:700px){.bento{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:130px;}
+  .bento>*{grid-column:auto;}
+  .bento .b-wide{grid-column:span 2;grid-row:span 2;}
+  .bento .b-img{grid-column:span 2;grid-row:span 2;}
+}
+.b-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;justify-content:center;transition:transform .3s,border-color .3s;}
+.b-card:hover{transform:translateY(-4px);border-color:var(--primary);}
+.b-card .num{font-family:var(--font-heading);color:var(--primary);font-size:2rem;font-variant-numeric:tabular-nums;}
+.b-card .lbl{color:var(--muted);font-size:.82rem;margin-top:6px;}
+.b-card i{color:var(--accent);width:24px;height:24px;margin-bottom:10px;}
+.b-img{position:relative;border-radius:16px;overflow:hidden;min-height:200px;}
+.b-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.b-img .cap{position:relative;z-index:2;margin-top:auto;padding:16px;background:linear-gradient(0deg,rgba(13,17,26,.9),transparent);color:var(--foreground);font-family:var(--font-heading);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase;align-self:stretch;}
+.b-img{display:flex;flex-direction:column;}
+
+/* ===== REVIEWS (log strip) ===== */
+#reviews{background:var(--background);}
+.log-scroll{display:flex;gap:16px;overflow-x:auto;margin-top:40px;padding-bottom:14px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
+.log-scroll::-webkit-scrollbar{height:6px;}
+.log-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+.log-card{flex:0 0 auto;width:280px;scroll-snap-align:start;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;}
+@media(min-width:600px){.log-card{width:320px;}}
+.log-card .ts{font-family:var(--font-heading);font-size:.65rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:flex;justify-content:space-between;}
+.log-card .stars{display:flex;gap:2px;color:var(--accent);margin-top:10px;}
+.log-card .stars i{width:14px;height:14px;fill:var(--accent);}
+.log-card p{margin-top:12px;color:var(--foreground);font-size:.92rem;}
+.log-card .who{margin-top:14px;color:var(--muted);font-size:.8rem;font-family:var(--font-heading);letter-spacing:.04em;text-transform:uppercase;}
+
+/* ===== CONTACT / CTA ===== */
+#contact{position:relative;overflow:hidden;background:var(--bg-accent);}
+.cta-bg{position:absolute;inset:0;z-index:0;}
+.cta-bg img{width:100%;height:100%;object-fit:cover;opacity:.22;}
+.cta-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,rgba(13,17,26,.85),rgba(20,22,26,.96));}
+.contact-inner{position:relative;z-index:2;}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;margin-top:40px;}
+@media(min-width:860px){.contact-grid{grid-template-columns:1.1fr .9fr;}.contact-grid>*{grid-column:auto;}}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;}
+.contact-links{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.contact-links a{display:flex;align-items:center;gap:12px;background:var(--secondary);border:1px solid var(--border);border-radius:12px;padding:14px 16px;min-height:44px;transition:border-color .25s,transform .25s;}
+.contact-links a:hover{border-color:var(--primary);transform:translateX(4px);}
+.contact-links a i{width:18px;height:18px;color:var(--primary);flex:none;}
+.coord{font-family:var(--font-heading);color:var(--muted);font-size:.72rem;letter-spacing:.06em;margin-top:18px;}
+.coord span{color:var(--primary);}
+
+/* ===== FOOTER ===== */
+footer{background:var(--background);border-top:1px solid var(--border);padding:56px 0 24px;}
+.foot-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;}
+@media(min-width:768px){.foot-grid{grid-template-columns:1.3fr 1fr 1fr 1fr;}.foot-grid>*{grid-column:auto;}}
+.foot-brand .logo{font-family:var(--font-heading);font-weight:700;font-size:1.2rem;color:var(--foreground);}
+.foot-brand .logo span{color:var(--primary);}
+.foot-brand p{color:var(--muted);margin-top:12px;font-size:.88rem;max-width:320px;}
+.foot-col h5{font-family:var(--font-heading);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.foot-col ul{display:flex;flex-direction:column;gap:10px;}
+.foot-col a{color:var(--foreground);font-size:.88rem;}
+.foot-col a:hover{color:var(--primary);}
+.foot-bottom{margin-top:44px;padding-top:22px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:14px;}
+@media(min-width:768px){.foot-bottom{flex-direction:row;justify-content:space-between;align-items:center;}}
+.foot-bottom p{color:var(--muted);font-size:.78rem;}
+.credits-list{color:var(--muted);font-size:.72rem;line-height:2;}
+.credits-list a{color:var(--muted);text-decoration:underline;}
+.deelabs-badge{font-size:.75rem;color:var(--muted);font-weight:400;}
+.deelabs-badge:hover{color:var(--primary);}
+</style>
+</head>
+<body>
+
+<aside id="sideRail" aria-label="Dashboard navigation">
+  <div class="rail-logo">KC</div>
+  <nav>
+    <a href="#home"><i data-lucide="activity"></i>HOME</a>
+    <a href="#route"><i data-lucide="route"></i>ROUTE</a>
+    <a href="#services"><i data-lucide="list-checks"></i>SERVICE</a>
+    <a href="#fleet"><i data-lucide="car"></i>FLEET</a>
+    <a href="#trust"><i data-lucide="shield-check"></i>TRUST</a>
+    <a href="#reviews"><i data-lucide="star"></i>LOGS</a>
+    <a href="#contact"><i data-lucide="phone"></i>CONTACT</a>
+  </nav>
+  <div class="rail-status">
+    <div class="dot-ping"></div>
+    ONLINE
+  </div>
+</aside>
+
+<header id="siteHeader">
+  <a href="#home" class="logo">KARA<span>C</span><small>TRANSPORTATION</small></a>
+  <nav class="main-nav">
+    <a href="#home" data-lang-th="หน้าแรก" data-lang-en="Home">หน้าแรก</a>
+    <a href="#route" data-lang-th="เส้นทาง" data-lang-en="Route">เส้นทาง</a>
+    <a href="#services" data-lang-th="บริการ" data-lang-en="Services">บริการ</a>
+    <a href="#fleet" data-lang-th="ยานพาหนะ" data-lang-en="Fleet">ยานพาหนะ</a>
+    <a href="#trust" data-lang-th="ความน่าเชื่อถือ" data-lang-en="Reliability">ความน่าเชื่อถือ</a>
+    <a href="#reviews" data-lang-th="รีวิว" data-lang-en="Reviews">รีวิว</a>
+    <a href="#contact" data-lang-th="ติดต่อ" data-lang-en="Contact">ติดต่อ</a>
+  </nav>
+  <div class="header-right">
+    <div class="lang-sw" role="button" aria-label="Toggle language">
+      <i data-lucide="globe" width="14" height="14"></i>
+      <span class="lang-sw__label">TH</span>
+    </div>
+    <a href="#contact" class="btn btn-primary" id="headerCta" data-lang-th="จองรถ" data-lang-en="Book Now">จองรถ</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu"><i data-lucide="menu"></i></button>
+  </div>
+</header>
+
+<div id="mobileNav">
+  <div class="close-row"><button class="close-btn" id="closeMobileNav" aria-label="Close menu"><i data-lucide="x"></i></button></div>
+  <nav>
+    <a href="#home" data-lang-th="หน้าแรก" data-lang-en="Home">หน้าแรก</a>
+    <a href="#route" data-lang-th="เส้นทาง" data-lang-en="Route">เส้นทาง</a>
+    <a href="#services" data-lang-th="บริการ" data-lang-en="Services">บริการ</a>
+    <a href="#fleet" data-lang-th="ยานพาหนะ" data-lang-en="Fleet">ยานพาหนะ</a>
+    <a href="#trust" data-lang-th="ความน่าเชื่อถือ" data-lang-en="Reliability">ความน่าเชื่อถือ</a>
+    <a href="#reviews" data-lang-th="รีวิว" data-lang-en="Reviews">รีวิว</a>
+    <a href="#contact" data-lang-th="ติดต่อ" data-lang-en="Contact">ติดต่อ</a>
+  </nav>
+  <a href="#contact" class="btn btn-primary mobile-cta" data-lang-th="จองรถรับส่งเลย" data-lang-en="Book Transfer Now">จองรถรับส่งเลย</a>
+</div>
+
+<main>
+<section id="home">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1766198971304-32d71f18745c?w=1600&h=1000&fit=crop" alt="ถนนยามค่ำคืนพร้อมไฟถนนดวงเดียว">
+  </div>
+  <div class="container hero-inner">
+    <div>
+      <div class="eyebrow reveal"><span class="dot-ping"></span><span data-lang-th="สถานะระบบ · ออนไลน์" data-lang-en="SYSTEM STATUS · ONLINE">สถานะระบบ · ออนไลน์</span></div>
+      <h1 class="reveal" data-lang-th='รถรับส่งอย่างเป็นทางการ<br>สำหรับโรงแรม<span class="hl">โรบินสัน เขาหลัก</span>' data-lang-en='Official Transfer Service<br>for <span class="hl">Robinson Khao Lak</span>'>รถรับส่งอย่างเป็นทางการ<br>สำหรับโรงแรม<span class="hl">โรบินสัน เขาหลัก</span></h1>
+      <p class="hero-sub reveal" data-lang-th="เชื่อมต่อสนามบินภูเก็ตกับโรงแรมโรบินสัน เขาหลัก ตลอด 24 ชั่วโมง ติดตามเที่ยวบินแบบเรียลไทม์ คนขับมืออาชีพ บริการถึงหน้าประตูห้องพัก" data-lang-en="Connecting Phuket Airport to Robinson Khao Lak, 24 hours a day. Real-time flight tracking, professional drivers, true door-to-door service.">เชื่อมต่อสนามบินภูเก็ตกับโรงแรมโรบินสัน เขาหลัก ตลอด 24 ชั่วโมง ติดตามเที่ยวบินแบบเรียลไทม์ คนขับมืออาชีพ บริการถึงหน้าประตูห้องพัก</p>
+      <div class="hero-actions reveal">
+        <a href="#contact" class="btn btn-primary"><i data-lucide="navigation"></i><span data-lang-th="จองรถรับส่ง" data-lang-en="Book Transfer">จองรถรับส่ง</span></a>
+        <a href="#route" class="btn btn-secondary"><i data-lucide="map-pin"></i><span data-lang-th="ดูเส้นทาง" data-lang-en="View Route">ดูเส้นทาง</span></a>
+      </div>
+      <div class="stat-strip reveal">
+        <div class="stat-box"><div class="num">65</div><div class="lbl" data-lang-th="นาทีเฉลี่ย" data-lang-en="AVG MIN ETA">นาทีเฉลี่ย</div></div>
+        <div class="stat-box"><div class="num">99.2%</div><div class="lbl" data-lang-th="ตรงเวลา" data-lang-en="ON-TIME RATE">ตรงเวลา</div></div>
+        <div class="stat-box"><div class="num">12</div><div class="lbl" data-lang-th="คันในระบบ" data-lang-en="FLEET UNITS">คันในระบบ</div></div>
+        <div class="stat-box"><div class="num">24/7</div><div class="lbl" data-lang-th="ศูนย์ควบคุม" data-lang-en="DISPATCH DESK">ศูนย์ควบคุม</div></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="hud-panel">
+        <div class="hud-head">
+          <span class="tag" data-lang-th="แผงติดตามเส้นทางสด" data-lang-en="LIVE ROUTE TRACKER">แผงติดตามเส้นทางสด</span>
+          <span class="live"><i data-lucide="radio" style="width:12px;height:12px"></i> LIVE</span>
+        </div>
+        <svg class="route-svg" viewBox="0 0 460 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path id="motionPath" class="route-path" d="M40 190 C 110 60, 200 210, 250 110 S 380 30, 420 55" stroke="var(--primary)" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="40" cy="190" r="7" fill="var(--accent)"/>
+          <circle cx="40" cy="190" r="12" fill="none" stroke="var(--accent)" stroke-width="1" opacity=".5"/>
+          <circle cx="250" cy="110" r="4" fill="var(--foreground)" opacity=".6"/>
+          <circle cx="420" cy="55" r="7" fill="var(--primary)"/>
+          <circle cx="420" cy="55" r="13" fill="none" stroke="var(--primary)" stroke-width="1" opacity=".5"/>
+          <circle r="5" fill="var(--accent)">
+            <animateMotion dur="5s" repeatCount="indefinite" path="M40 190 C 110 60, 200 210, 250 110 S 380 30, 420 55"/>
+          </circle>
+          <text x="14" y="212" class="wp-label mono-en">HKT</text>
+          <text x="222" y="135" class="wp-label mono-en">ROUTE 4</text>
+          <text x="345" y="42" class="wp-label main mono-en">ROBINSON</text>
+        </svg>
+        <div class="route-meta">
+          <div><div class="v">75</div><div class="k" data-lang-th="กม." data-lang-en="KM">กม.</div></div>
+          <div><div class="v">~68</div><div class="k" data-lang-th="นาที" data-lang-en="MIN">นาที</div></div>
+          <div><div class="v">A1</div><div class="k" data-lang-th="สถานะเที่ยว" data-lang-en="TRIP STATUS">สถานะเที่ยว</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="route">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag" data-lang-th="แผงเส้นทางปฏิบัติการ" data-lang-en="OPERATIONS ROUTE">แผงเส้นทางปฏิบัติการ</span>
+      <h2 class="section-title" style="margin-top:8px" data-lang-th='จากรันเวย์ถึงประตู<span class="accent-txt">ห้องพักของคุณ</span>' data-lang-en='From Runway to Your <span class="accent-txt">Room Door</span>'>จากรันเวย์ถึงประตู<span class="accent-txt">ห้องพักของคุณ</span></h2>
+      <p class="section-sub" data-lang-th="ทุกเที่ยวถูกติดตามตั้งแต่ล้อแตะรันเวย์ จนถึงวินาทีที่คุณเช็คอินเข้าโรงแรม ระบบของเราออกแบบให้ไม่มีการรอคอยที่ไม่จำเป็น" data-lang-en="Every transfer is tracked from wheels-down at the airport to the moment you check in. Zero unnecessary waiting, by design.">ทุกเที่ยวถูกติดตามตั้งแต่ล้อแตะรันเวย์ จนถึงวินาทีที่คุณเช็คอินเข้าโรงแรม ระบบของเราออกแบบให้ไม่มีการรอคอยที่ไม่จำเป็น</p>
+    </div>
+    <div class="steps-manifest">
+      <div class="step-row reveal">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4 data-lang-th="ยืนยันการรับ" data-lang-en="Pickup Confirmation">ยืนยันการรับ</h4>
+          <p data-lang-th="ทีมงานยืนยันเที่ยวบินและจุดนัดหมายล่วงหน้า 24 ชั่วโมงผ่าน LINE หรือโทรศัพท์" data-lang-en="Our team confirms your flight and meeting point 24 hours ahead via LINE or phone.">ทีมงานยืนยันเที่ยวบินและจุดนัดหมายล่วงหน้า 24 ชั่วโมงผ่าน LINE หรือโทรศัพท์</p>
+        </div>
+        <div class="step-time">T-24H</div>
+      </div>
+      <div class="step-row reveal">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4 data-lang-th="ติดตามเที่ยวบินแบบเรียลไทม์" data-lang-en="Real-Time Flight Tracking">ติดตามเที่ยวบินแบบเรียลไทม์</h4>
+          <p data-lang-th="ระบบตรวจสอบสถานะเที่ยวบินอัตโนมัติ หากเที่ยวบินล่าช้า คนขับจะปรับเวลาไปรับให้ตรงกัน ไม่มีค่าใช้จ่ายเพิ่ม" data-lang-en="Flight status is monitored automatically. If your flight is delayed, your driver adjusts — no extra charge.">ระบบตรวจสอบสถานะเที่ยวบินอัตโนมัติ หากเที่ยวบินล่าช้า คนขับจะปรับเวลาไปรับให้ตรงกัน ไม่มีค่าใช้จ่ายเพิ่ม</p>
+        </div>
+        <div class="step-time">T-0</div>
+      </div>
+      <div class="step-row reveal">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4 data-lang-th="รับส่งถึงหน้าประตู" data-lang-en="Door-to-Door Transfer">รับส่งถึงหน้าประตู</h4>
+          <p data-lang-th="เดินทางผ่านถนนสาย 4 ชายฝั่งเขาหลัก ระยะทาง 75 กม. ใช้เวลาเฉลี่ย 65-70 นาที รถปรับอากาศ สะอาด ปลอดภัย" data-lang-en="A scenic 75km drive along Route 4 through the Khao Lak coastline, averaging 65-70 minutes in a clean, air-conditioned vehicle.">เดินทางผ่านถนนสาย 4 ชายฝั่งเขาหลัก ระยะทาง 75 กม. ใช้เวลาเฉลี่ย 65-70 นาที รถปรับอากาศ สะอาด ปลอดภัย</p>
+        </div>
+        <div class="step-time">+68 MIN</div>
+      </div>
+      <div class="step-row reveal">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h4 data-lang-th="ถึงโรบินสัน เขาหลัก" data-lang-en="Arrival at Robinson Khao Lak">ถึงโรบินสัน เขาหลัก</h4>
+          <p data-lang-th="คนขับช่วยขนกระเป๋าและดูแลจนถึงล็อบบี้เช็คอิน พร้อมให้ข้อมูลสำหรับเที่ยวขากลับ" data-lang-en="Your driver assists with luggage all the way to the check-in lobby, and briefs you on your return trip.">คนขับช่วยขนกระเป๋าและดูแลจนถึงล็อบบี้เช็คอิน พร้อมให้ข้อมูลสำหรับเที่ยวขากลับ</p>
+        </div>
+        <div class="step-time">ARRIVED</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag" data-lang-th="รายการบริการ" data-lang-en="SERVICE MANIFEST">รายการบริการ</span>
+      <h2 class="section-title" style="margin-top:8px" data-lang-th='เลือกรูปแบบการเดินทาง<span class="accent-txt">ที่ใช่สำหรับคุณ</span>' data-lang-en='Select the <span class="accent-txt">Transfer Mode</span> You Need'>เลือกรูปแบบการเดินทาง<span class="accent-txt">ที่ใช่สำหรับคุณ</span></h2>
+    </div>
+    <div class="manifest reveal">
+      <details open>
+        <summary><span class="sv-idx mono-en">SVC-01</span><span class="sv-name" data-lang-th="รับส่งสนามบิน (ไป-กลับ)" data-lang-en="Airport Transfer (Round Trip)">รับส่งสนามบิน (ไป-กลับ)</span><i data-lucide="chevron-down" class="chev"></i></summary>
+        <div class="sv-body">
+          <p data-lang-th="บริการหลักของเรา รับจากสนามบินนานาชาติภูเก็ตส่งตรงถึงโรบินสัน เขาหลัก และรับกลับในวันเดินทางออก จองล่วงหน้าได้ทันทีหลังทราบเที่ยวบิน" data-lang-en="Our core route: from Phuket International Airport direct to Robinson Khao Lak, plus your return trip on departure day. Book as soon as you have your flight number.">บริการหลักของเรา รับจากสนามบินนานาชาติภูเก็ตส่งตรงถึงโรบินสัน เขาหลัก และรับกลับในวันเดินทางออก จองล่วงหน้าได้ทันทีหลังทราบเที่ยวบิน</p>
+          <div class="sv-tags">
+            <span data-lang-th="ติดตามเที่ยวบิน" data-lang-en="FLIGHT TRACKED">ติดตามเที่ยวบิน</span>
+            <span data-lang-th="ป้ายรับที่สนามบิน" data-lang-en="MEET & GREET">ป้ายรับที่สนามบิน</span>
+            <span data-lang-th="ไม่มีค่ารอเพิ่ม" data-lang-en="NO WAIT FEE">ไม่มีค่ารอเพิ่ม</span>
+          </div>
+        </div>
+      </details>
+      <details>
+        <summary><span class="sv-idx mono-en">SVC-02</span><span class="sv-name" data-lang-th="รับส่งถึงหน้าประตูห้องพัก" data-lang-en="Hotel Door-to-Door">รับส่งถึงหน้าประตูห้องพัก</span><i data-lucide="chevron-down" class="chev"></i></summary>
+        <div class="sv-body">
+          <p data-lang-th="ไม่ต้องต่อรถหรือเดินหาแท็กซี่ คนขับส่งท่านถึงล็อบบี้โรบินสัน เขาหลักโดยตรง พร้อมช่วยขนสัมภาระตลอดเส้นทาง" data-lang-en="No transfers, no hunting for a taxi. Your driver takes you straight to the Robinson Khao Lak lobby, assisting with luggage the entire way.">ไม่ต้องต่อรถหรือเดินหาแท็กซี่ คนขับส่งท่านถึงล็อบบี้โรบินสัน เขาหลักโดยตรง พร้อมช่วยขนสัมภาระตลอดเส้นทาง</p>
+          <div class="sv-tags">
+            <span data-lang-th="ส่งตรงถึงล็อบบี้" data-lang-en="LOBBY DROP-OFF">ส่งตรงถึงล็อบบี้</span>
+            <span data-lang-th="ช่วยขนกระเป๋า" data-lang-en="LUGGAGE ASSIST">ช่วยขนกระเป๋า</span>
+          </div>
+        </div>
+      </details>
+      <details>
+        <summary><span class="sv-idx mono-en">SVC-03</span><span class="sv-name" data-lang-th="รถตู้สำหรับกลุ่ม / ครอบครัว" data-lang-en="Group & Family Van">รถตู้สำหรับกลุ่ม / ครอบครัว</span><i data-lucide="chevron-down" class="chev"></i></summary>
+        <div class="sv-body">
+          <p data-lang-th="รถตู้ปรับอากาศความจุสูงสุด 10 ที่นั่ง เหมาะสำหรับครอบครัวใหญ่หรือกลุ่มเพื่อน พร้อมพื้นที่เก็บสัมภาระกว้างขวาง" data-lang-en="Air-conditioned vans seating up to 10, ideal for large families or groups of friends, with generous luggage space.">รถตู้ปรับอากาศความจุสูงสุด 10 ที่นั่ง เหมาะสำหรับครอบครัวใหญ่หรือกลุ่มเพื่อน พร้อมพื้นที่เก็บสัมภาระกว้างขวาง</p>
+          <div class="sv-tags">
+            <span data-lang-th="สูงสุด 10 ที่นั่ง" data-lang-en="UP TO 10 SEATS">สูงสุด 10 ที่นั่ง</span>
+            <span data-lang-th="คาร์ซีทเด็กฟรี" data-lang-en="FREE CHILD SEAT">คาร์ซีทเด็กฟรี</span>
+          </div>
+        </div>
+      </details>
+      <details>
+        <summary><span class="sv-idx mono-en">SVC-04</span><span class="sv-name" data-lang-th="เหมารถส่วนตัวรายวัน" data-lang-en="Private Day Charter">เหมารถส่วนตัวรายวัน</span><i data-lucide="chevron-down" class="chev"></i></summary>
+        <div class="sv-body">
+          <p data-lang-th="เหมารถพร้อมคนขับสำหรับทริปนอกสถานที่ ท่องเที่ยวรอบเขาหลักหรือจังหวัดใกล้เคียง คิดราคาแบบเหมาจ่ายรายวัน" data-lang-en="Charter a vehicle with driver for day trips around Khao Lak or nearby provinces. Flat daily rate, fully private.">เหมารถพร้อมคนขับสำหรับทริปนอกสถานที่ ท่องเที่ยวรอบเขาหลักหรือจังหวัดใกล้เคียง คิดราคาแบบเหมาจ่ายรายวัน</p>
+          <div class="sv-tags">
+            <span data-lang-th="ยืดหยุ่นตามแผน" data-lang-en="FLEXIBLE ITINERARY">ยืดหยุ่นตามแผน</span>
+            <span data-lang-th="คนขับพูดอังกฤษ" data-lang-en="ENGLISH-SPEAKING">คนขับพูดอังกฤษ</span>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="fleet">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag" data-lang-th="แฟ้มยานพาหนะ" data-lang-en="FLEET REGISTRY">แฟ้มยานพาหนะ</span>
+      <h2 class="section-title" style="margin-top:8px" data-lang-th='ยานพาหนะที่ผ่านการตรวจสอบ<span class="accent-txt">ทุกคัน ทุกเที่ยว</span>' data-lang-en='Every Vehicle, <span class="accent-txt">Inspected Every Trip</span>'>ยานพาหนะที่ผ่านการตรวจสอบ<span class="accent-txt">ทุกคัน ทุกเที่ยว</span></h2>
+    </div>
+    <div class="fleet-row reveal">
+      <div class="fleet-media">
+        <img src="https://images.unsplash.com/photo-1765928442547-a88235be4cb0?w=800&h=560&fit=crop" alt="รถตู้สีดำจอดอยู่ในยามค่ำคืน">
+        <p class="credit">Photo by <a href="https://unsplash.com/@octezy?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">maxim é</a> on <a href="https://unsplash.com/?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></p>
+      </div>
+      <div class="fleet-text">
+        <h3 data-lang-th="รถตู้พรีเมียม รุ่นมาตรฐาน" data-lang-en="Premium Standard Van">รถตู้พรีเมียม รุ่นมาตรฐาน</h3>
+        <p data-lang-th="รถตู้ปรับอากาศรุ่นใหม่ ตรวจเช็คสภาพก่อนออกทุกเที่ยว ติดตั้ง GPS ติดตามตลอดเส้นทาง เบาะนั่งกว้างขวาง เดินทางสบายตลอด 75 กม." data-lang-en="Modern air-conditioned vans, inspected before every trip and GPS-tracked for the full route. Spacious seating for a comfortable 75km ride.">รถตู้ปรับอากาศรุ่นใหม่ ตรวจเช็คสภาพก่อนออกทุกเที่ยว ติดตั้ง GPS ติดตามตลอดเส้นทาง เบาะนั่งกว้างขวาง เดินทางสบายตลอด 75 กม.</p>
+        <div class="spec-grid">
+          <div><div class="k" data-lang-th="ความจุ" data-lang-en="CAPACITY">ความจุ</div><div class="v"><i data-lucide="users"></i>8 PAX</div></div>
+          <div><div class="k" data-lang-th="ระดับ" data-lang-en="CLASS">ระดับ</div><div class="v"><i data-lucide="car"></i>PREMIUM MPV</div></div>
+          <div><div class="k" data-lang-th="สิ่งอำนวยความสะดวก" data-lang-en="FEATURES">สิ่งอำนวยความสะดวก</div><div class="v"><i data-lucide="wifi"></i>WI-FI</div></div>
+          <div><div class="k" data-lang-th="ระบบทำความเย็น" data-lang-en="CLIMATE">ระบบทำความเย็น</div><div class="v"><i data-lucide="snowflake"></i>DUAL A/C</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fleet-row rev reveal">
+      <div class="fleet-media">
+        <img src="https://images.unsplash.com/photo-1782871998392-db245d90f755?w=800&h=560&fit=crop" alt="รถสปอร์ตสีขาววิ่งอยู่ในอุโมงค์ทันสมัย">
+        <p class="credit">Photo by <a href="https://unsplash.com/@harveyabayasiri?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Harvey Abayasiri</a> on <a href="https://unsplash.com/?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></p>
+      </div>
+      <div class="fleet-text">
+        <h3 data-lang-th="รถเก๋งพรีเมียม สำหรับ VIP" data-lang-en="Premium Sedan — VIP Class">รถเก๋งพรีเมียม สำหรับ VIP</h3>
+        <p data-lang-th="เลือกได้สำหรับผู้เดินทาง 1-3 ท่านที่ต้องการความเป็นส่วนตัวสูงสุด ภายในหรูหรา เงียบสงบ เหมาะกับทริปธุรกิจหรือฮันนีมูน" data-lang-en="For travelers of 1-3 who want maximum privacy. A quiet, refined interior, ideal for business trips or honeymoon transfers.">เลือกได้สำหรับผู้เดินทาง 1-3 ท่านที่ต้องการความเป็นส่วนตัวสูงสุด ภายในหรูหรา เงียบสงบ เหมาะกับทริปธุรกิจหรือฮันนีมูน</p>
+        <div class="spec-grid">
+          <div><div class="k" data-lang-th="ความจุ" data-lang-en="CAPACITY">ความจุ</div><div class="v"><i data-lucide="users"></i>3 PAX</div></div>
+          <div><div class="k" data-lang-th="ระดับ" data-lang-en="CLASS">ระดับ</div><div class="v"><i data-lucide="car"></i>VIP SEDAN</div></div>
+          <div><div class="k" data-lang-th="สิ่งอำนวยความสะดวก" data-lang-en="FEATURES">สิ่งอำนวยความสะดวก</div><div class="v"><i data-lucide="droplet"></i>MINI BAR</div></div>
+          <div><div class="k" data-lang-th="เสียงรบกวน" data-lang-en="NOISE LEVEL">เสียงรบกวน</div><div class="v"><i data-lucide="volume-1"></i>ULTRA QUIET</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="trust">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag" data-lang-th="ระบบความน่าเชื่อถือ" data-lang-en="RELIABILITY LOG">ระบบความน่าเชื่อถือ</span>
+      <h2 class="section-title" style="margin-top:8px" data-lang-th='เหตุผลที่แขกโรบินสันไว้ใจ<span class="accent-txt">เรามาโดยตลอด</span>' data-lang-en='Why Robinson Guests <span class="accent-txt">Trust Our Service</span>'>เหตุผลที่แขกโรบินสันไว้ใจ<span class="accent-txt">เรามาโดยตลอด</span></h2>
+    </div>
+    <div class="bento reveal">
+      <div class="b-card b-wide">
+        <i data-lucide="badge-check"></i>
+        <div class="num">100%</div>
+        <div class="lbl" data-lang-th="พันธมิตรอย่างเป็นทางการของโรงแรมโรบินสัน เขาหลัก ทุกเที่ยวได้รับการยืนยันโดยตรงจากฝ่ายต้อนรับของโรงแรม" data-lang-en="Official transfer partner of Robinson Khao Lak — every trip confirmed directly through the hotel's front desk.">พันธมิตรอย่างเป็นทางการของโรงแรมโรบินสัน เขาหลัก ทุกเที่ยวได้รับการยืนยันโดยตรงจากฝ่ายต้อนรับของโรงแรม</div>
+      </div>
+      <div class="b-img">
+        <img src="https://images.pexels.com/photos/9520201/pexels-photo-9520201.jpeg?w=640&h=520&fit=crop" alt="คนขับมืออาชีพขับรถขณะผู้โดยสารอ่านหนังสือในรถหรู">
+        <div class="cap" data-lang-th="คนขับมืออาชีพที่ผ่านการคัดกรอง" data-lang-en="Licensed & Vetted Professional Drivers">คนขับมืออาชีพที่ผ่านการคัดกรอง</div>
+      </div>
+      <div class="b-card">
+        <i data-lucide="shield-check"></i>
+        <div class="num">100%</div>
+        <div class="lbl" data-lang-th="ประกันภัยผู้โดยสารครบทุกที่นั่ง" data-lang-en="Full passenger insurance on every seat">ประกันภัยผู้โดยสารครบทุกที่นั่ง</div>
+      </div>
+      <div class="b-card">
+        <i data-lucide="satellite"></i>
+        <div class="num">GPS</div>
+        <div class="lbl" data-lang-th="ติดตามยานพาหนะแบบเรียลไทม์ทุกคัน" data-lang-en="Real-time GPS tracking on every vehicle">ติดตามยานพาหนะแบบเรียลไทม์ทุกคัน</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag" data-lang-th="บันทึกการเดินทาง" data-lang-en="TRANSMISSION LOG">บันทึกการเดินทาง</span>
+      <h2 class="section-title" style="margin-top:8px" data-lang-th='เสียงจากผู้โดยสาร<span class="accent-txt">เที่ยวล่าสุด</span>' data-lang-en='Recent Passenger <span class="accent-txt">Transmissions</span>'>เสียงจากผู้โดยสาร<span class="accent-txt">เที่ยวล่าสุด</span></h2>
+    </div>
+    <div class="log-scroll reveal">
+      <div class="log-card">
+        <div class="ts"><span>LOG #A184</span><span>2026-08-21</span></div>
+        <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p data-lang-th="เที่ยวบินล่าช้าเกือบชั่วโมง แต่คนขับรออยู่ที่สนามบินพร้อมป้ายชื่อ ไม่มีปัญหาอะไรเลย บริการดีมากครับ" data-lang-en="Our flight was almost an hour late, but the driver was still waiting at the airport with our name sign. Zero issues — excellent service.">เที่ยวบินล่าช้าเกือบชั่วโมง แต่คนขับรออยู่ที่สนามบินพร้อมป้ายชื่อ ไม่มีปัญหาอะไรเลย บริการดีมากครับ</p>
+        <div class="who">— K. TANAWAT, BANGKOK</div>
+      </div>
+      <div class="log-card">
+        <div class="ts"><span>LOG #A177</span><span>2026-08-14</span></div>
+        <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p data-lang-th="รถสะอาดมาก คนขับพูดอังกฤษได้ดี ช่วยขนกระเป๋าตั้งแต่ต้นจนถึงล็อบบี้โรงแรม ประทับใจมาก" data-lang-en="The van was spotless and the driver's English was excellent. He helped with our bags all the way to the hotel lobby — very impressed.">รถสะอาดมาก คนขับพูดอังกฤษได้ดี ช่วยขนกระเป๋าตั้งแต่ต้นจนถึงล็อบบี้โรงแรม ประทับใจมาก</p>
+        <div class="who">— S. MUELLER, GERMANY</div>
+      </div>
+      <div class="log-card">
+        <div class="ts"><span>LOG #A165</span><span>2026-08-02</span></div>
+        <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p data-lang-th="จองผ่าน LINE ง่ายมาก ได้รับการยืนยันทันที ราคาชัดเจนไม่มีบวกเพิ่ม แนะนำสำหรับครอบครัวที่มีเด็กเล็ก" data-lang-en="Booking via LINE was effortless, confirmed instantly. Pricing was transparent with no hidden fees — great for families with young kids.">จองผ่าน LINE ง่ายมาก ได้รับการยืนยันทันที ราคาชัดเจนไม่มีบวกเพิ่ม แนะนำสำหรับครอบครัวที่มีเด็กเล็ก</p>
+        <div class="who">— N. WICHIT, PHUKET</div>
+      </div>
+      <div class="log-card">
+        <div class="ts"><span>LOG #A152</span><span>2026-07-26</span></div>
+        <div class="stars"><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i><i data-lucide="star"></i></div>
+        <p data-lang-th="เหมารถไปเที่ยวเกาะสิมิลันหนึ่งวัน คนขับรู้เส้นทางดีมาก แนะนำร้านอาหารอร่อยระหว่างทางด้วย" data-lang-en="Chartered the car for a day trip to Similan. The driver knew the routes well and recommended great food stops along the way.">เหมารถไปเที่ยวเกาะสิมิลันหนึ่งวัน คนขับรู้เส้นทางดีมาก แนะนำร้านอาหารอร่อยระหว่างทางด้วย</p>
+        <div class="who">— T. IWASAKI, JAPAN</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="cta-bg">
+    <img src="https://images.unsplash.com/photo-1755259050071-07c181c1a22d?w=1600&h=1000&fit=crop" alt="โขดหินริมทะเลสีฟ้าใสยามค่ำคืนที่เขาหลัก">
+  </div>
+  <div class="container contact-inner">
+    <div class="reveal">
+      <span class="section-tag" data-lang-th="ศูนย์รับคำขอ" data-lang-en="REQUEST TERMINAL">ศูนย์รับคำขอ</span>
+      <h2 class="section-title" style="margin-top:8px" data-lang-th='พร้อมส่งท่านถึง<span class="accent-txt">โรบินสัน เขาหลัก</span>' data-lang-en='Ready to Get You to <span class="accent-txt">Robinson Khao Lak</span>'>พร้อมส่งท่านถึง<span class="accent-txt">โรบินสัน เขาหลัก</span></h2>
+      <p class="section-sub" data-lang-th="แจ้งเที่ยวบินและจำนวนผู้โดยสาร ทีมงานของเราจะยืนยันคนขับและยานพาหนะให้ภายใน 30 นาที" data-lang-en="Send us your flight details and passenger count — our dispatch team confirms your driver and vehicle within 30 minutes.">แจ้งเที่ยวบินและจำนวนผู้โดยสาร ทีมงานของเราจะยืนยันคนขับและยานพาหนะให้ภายใน 30 นาที</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-card reveal">
+        <span class="section-tag" data-lang-th="ช่องทางติดต่อด่วน" data-lang-en="DIRECT CHANNELS">ช่องทางติดต่อด่วน</span>
+        <div class="contact-links">
+          <a href="tel:+66812345678"><i data-lucide="phone"></i><span>+66 81 234 5678</span></a>
+          <a href="https://line.me/ti/p/karac-transport" target="_blank" rel="noopener"><i data-lucide="message-circle"></i><span data-lang-th="แชท LINE Official" data-lang-en="Chat on LINE Official">แชท LINE Official</span></a>
+          <a href="mailto:dispatch@karac-transport.com"><i data-lucide="mail"></i><span>dispatch@karac-transport.com</span></a>
+        </div>
+        <div class="coord" data-lang-th='พิกัดปลายทาง <span style="color:var(--primary)">8.6572° N, 98.2497° E</span> · โรงแรมโรบินสัน เขาหลัก' data-lang-en='Destination Coordinates <span style="color:var(--primary)">8.6572° N, 98.2497° E</span> · Robinson Khao Lak'>พิกัดปลายทาง <span style="color:var(--primary)">8.6572° N, 98.2497° E</span> · โรงแรมโรบินสัน เขาหลัก</div>
+      </div>
+      <div class="contact-card reveal">
+        <span class="section-tag" data-lang-th="เวลาให้บริการ" data-lang-en="OPERATING HOURS">เวลาให้บริการ</span>
+        <div class="contact-links" style="margin-top:20px">
+          <a href="#" style="pointer-events:none"><i data-lucide="clock"></i><span data-lang-th="ศูนย์ควบคุม — เปิดตลอด 24 ชม." data-lang-en="Dispatch Desk — Open 24 Hours">ศูนย์ควบคุม — เปิดตลอด 24 ชม.</span></a>
+          <a href="#" style="pointer-events:none"><i data-lucide="timer"></i><span data-lang-th="ยืนยันการจอง — ภายใน 30 นาที" data-lang-en="Booking Confirmation — Within 30 Minutes">ยืนยันการจอง — ภายใน 30 นาที</span></a>
+          <a href="#" style="pointer-events:none"><i data-lucide="calendar-clock"></i><span data-lang-th="จองล่วงหน้าได้สูงสุด 90 วัน" data-lang-en="Book up to 90 Days in Advance">จองล่วงหน้าได้สูงสุด 90 วัน</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">KARA<span>C</span></div>
+        <p data-lang-th="ผู้ให้บริการรถรับส่งอย่างเป็นทางการสำหรับโรงแรมโรบินสัน เขาหลัก เชื่อมต่อสนามบินภูเก็ตด้วยระบบติดตามแบบเรียลไทม์ ตลอด 24 ชั่วโมง" data-lang-en="Official transfer operator for Robinson Khao Lak, connecting Phuket Airport with real-time tracked service, 24 hours a day.">ผู้ให้บริการรถรับส่งอย่างเป็นทางการสำหรับโรงแรมโรบินสัน เขาหลัก เชื่อมต่อสนามบินภูเก็ตด้วยระบบติดตามแบบเรียลไทม์ ตลอด 24 ชั่วโมง</p>
+      </div>
+      <div class="foot-col">
+        <h5 data-lang-th="เมนู" data-lang-en="MENU">เมนู</h5>
+        <ul>
+          <li><a href="#route" data-lang-th="เส้นทาง" data-lang-en="Route">เส้นทาง</a></li>
+          <li><a href="#services" data-lang-th="บริการ" data-lang-en="Services">บริการ</a></li>
+          <li><a href="#fleet" data-lang-th="ยานพาหนะ" data-lang-en="Fleet">ยานพาหนะ</a></li>
+          <li><a href="#reviews" data-lang-th="รีวิว" data-lang-en="Reviews">รีวิว</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5 data-lang-th="ติดต่อ" data-lang-en="CONTACT">ติดต่อ</h5>
+        <ul>
+          <li><a href="tel:+66812345678">+66 81 234 5678</a></li>
+          <li><a href="mailto:dispatch@karac-transport.com">dispatch@karac-transport.com</a></li>
+          <li><a href="https://line.me/ti/p/karac-transport" target="_blank" rel="noopener">LINE Official</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5 data-lang-th="เครดิตภาพ" data-lang-en="PHOTO CREDITS">เครดิตภาพ</h5>
+        <ul class="credits-list">
+          <li>Albert Stoynov, <a href="https://unsplash.com/@albertstoynov?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></li>
+          <li>maxim é, <a href="https://unsplash.com/@octezy?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></li>
+          <li>Harvey Abayasiri, <a href="https://unsplash.com/@harveyabayasiri?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></li>
+          <li>Ann Kolisnyk, <a href="https://unsplash.com/@anettta?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></li>
+          <li>Ron Lach, <a href="https://www.pexels.com/@ron-lach" target="_blank" rel="noopener nofollow">Pexels</a></li>
+          <li><a href="https://unsplash.com/?utm_source=deelabs&utm_medium=referral" target="_blank" rel="noopener nofollow">Unsplash</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p data-lang-th="© 2026 KaraC Transportation. สงวนลิขสิทธิ์ทุกประการ" data-lang-en="© 2026 KaraC Transportation. All rights reserved.">© 2026 KaraC Transportation. สงวนลิขสิทธิ์ทุกประการ</p>
+      <a class="deelabs-badge" href="https://deelabs.co/?utm_source=client-site&utm_medium=badge" target="_blank" rel="noopener">Powered by DeeLabs</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){var K='site-lang',L=localStorage.getItem(K)||'th';function S(l){L=l;localStorage.setItem(K,l);document.documentElement.lang=l;document.querySelectorAll('[data-lang-th]').forEach(function(e){var t=e.getAttribute('data-lang-'+l);if(t!==null){if(/[<&]/.test(t)){e.innerHTML=t}else{e.textContent=t}}});var lb=document.querySelector('.lang-sw__label');if(lb){lb.textContent=l.toUpperCase()}}var sw=document.querySelector('.lang-sw');if(sw){sw.addEventListener('click',function(){S(L==='th'?'en':'th')});sw.style.cursor='pointer'}if(L!=='th'){S(L)}})();
+
+// header scroll shrink
+(function(){
+  var h=document.getElementById('siteHeader');
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>40){h.classList.add('scrolled');}else{h.classList.remove('scrolled');}
+  });
+})();
+
+// mobile nav toggle
+(function(){
+  var btn=document.getElementById('hamburgerBtn'),close=document.getElementById('closeMobileNav'),nav=document.getElementById('mobileNav');
+  if(btn){btn.addEventListener('click',function(){nav.classList.add('open');});}
+  if(close){close.addEventListener('click',function(){nav.classList.remove('open');});}
+  nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');});});
+})();
+
+// scroll reveal
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('is-visible'); io.unobserve(en.target);} });
+  },{threshold:.15});
+  els.forEach(function(e){io.observe(e);});
+})();
+
+lucide.createIcons();
+</script>
+</body>
+</html>

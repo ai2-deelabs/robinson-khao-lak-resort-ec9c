@@ -1,0 +1,5 @@
+DIRECTION 1: split-screen hero with vehicle photo left, rigid ticket-stub text grid right — condensed geometric sans (like Eurostile) for headers, monospace for schedule/price data — Bangkok International Airport signage system: signal blue #0057B8 + porcelain white #F7F9FB + safety yellow #FFCC00 accent for CTAs — brisk, punctual, transactional efficiency
+
+DIRECTION 2: full-bleed single-column scroll, generous whitespace, large rounded photo cards stacked with soft parallax — humanist serif (like Tiempos) headlines paired with light grotesk body — Andaman dusk seascape: deep lagoon teal #0B3D42 fading to soft dawn peach #F4C9A8, cloud grey #E8E4DD as base — unhurried, coastal-resort calm
+
+DIRECTION 3: dark dashboard-style layout, fixed sidebar nav, live-map/route visual as centerpiece — technical mono headlines (like a terminal readout) with tight tracking, all-caps labels — night air-traffic-control theme: charcoal black #14161A canvas + electric cyan #00E5FF accent + amber #FFB000 status pings — precise, high-tech, always-on reliability
